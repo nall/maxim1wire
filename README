@@ -1,0 +1,9 @@
+Project: maxim1wire
+
+This is an AVR library to communicate with Maxim 1-Wire devices. Currently,
+the base protocol along with support for the following devices is implented:
+
+    * DS18B20 Digital Temperature Sensor
+
+To use this library, edit the configuration section in the Makefile.
+
