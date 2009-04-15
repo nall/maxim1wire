@@ -61,7 +61,72 @@
 uint8_t ds18b20_check_spad_crc(uint8_t* spad);
 uint8_t ds18b20_read_spad(uint8_t* spad);
 uint8_t ds18b20_write_spad(uint8_t* spad);
+
+#if ONEWIRE_USE_MACROS == 1
+#define ds18b20_read_temperature(temperature, error)\
+{\
+    temperature = 0;\
+    if(onewire_select_device_and_issue_command(CMD_18B20_CONV_TEMP, DS18B20_FAMILY_CODE) == EXIT_FAILURE)\
+    {\
+        error = EXIT_FAILURE;\
+    }\
+\
+    while(1)\
+    {\
+        const uint8_t done = onewire_readbyte();\
+\
+        if(done != 0)\
+        {\
+            break;\
+        }\
+    }\
+\
+    uint8_t spad[SPAD_MAX_BYTES];\
+    if(ds18b20_read_spad(&(spad[0])) == EXIT_FAILURE)\
+    {\
+        error = EXIT_FAILURE;\
+    }\
+\
+    temperature = spad[SPAD_TEMP_MSB];\
+    temperature <<= 8;\
+    temperature |= spad[SPAD_TEMP_LSB];\
+\
+    error = EXIT_SUCCESS;\
+}
+
+#define ds18b20_set_resolution(resolution, store_to_eeprom, error)\
+{\
+    uint8_t spad[SPAD_MAX_BYTES];\
+    if(ds18b20_read_spad(&(spad[0])) == EXIT_FAILURE)\
+    {\
+        error = EXIT_FAILURE;\
+    }\
+\
+    uint8_t config = spad[SPAD_CONFIG];\
+    if(((config >> 5) & 3) != resolution)\
+    {\
+        config &= ~(0x3 << 5);\
+        config |= (resolution << 5);\
+        spad[SPAD_CONFIG] = config;\
+        if(ds18b20_write_spad(&(spad[0])) == EXIT_FAILURE)\
+        {\
+            error = EXIT_FAILURE;\
+        }\
+\
+        if(store_to_eeprom != 0)\
+        {\
+            if(onewire_select_device_and_issue_command(CMD_18B20_COPY_SPAD, DS18B20_FAMILY_CODE) == EXIT_FAILURE)\
+            {\
+                error = EXIT_FAILURE;\
+            }\
+        }\
+    }\
+\
+    error= EXIT_SUCCESS;\
+}
+#else
 uint8_t ds18b20_read_temperature(int16_t* temperature);
 uint8_t ds18b20_set_resolution(const uint8_t resolution, const uint8_t store_to_eeprom);
+#endif // ONEWIRE_USE_MACROS
 
 #endif // __DS18B20__H__

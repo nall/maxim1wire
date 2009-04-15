@@ -6,12 +6,13 @@
 #############################
 # Begin configuration section
 #
-DEVICE     = attiny13
-CLOCK      = 4800000
-ONEWIRE_PORTIN = PINB
-ONEWIRE_PORT = PORTB
-ONEWIRE_IO_CTL = DDRB
-ONEWIRE_PIN = 0
+DEVICE     ?= attiny13
+CLOCK      ?= 4800000
+ONEWIRE_USE_MACROS ?= 0
+ONEWIRE_PORTIN ?= PINB
+ONEWIRE_PORT ?= PORTB
+ONEWIRE_IO_CTL ?= DDRB
+ONEWIRE_PIN ?= 0
 #
 # End configuration section
 #############################
@@ -19,6 +20,7 @@ ONEWIRE_PIN = 0
 COMPILE = avr-gcc -std=c99 -g -Wall -Os \
 	-DF_CPU=$(CLOCK) \
 	-mmcu=$(DEVICE) \
+	-DONEWIRE_USE_MACROS=$(ONEWIRE_USE_MACROS) \
 	-DONEWIRE_PORTIN=$(ONEWIRE_PORTIN) \
 	-DONEWIRE_PORT=$(ONEWIRE_PORT) \
 	-DONEWIRE_IO_CTL=$(ONEWIRE_IO_CTL) \
@@ -28,13 +30,13 @@ AR = avr-ar
 OBJECTS    = DS18B20.o OneWire.o
 
 # symbolic targets:
-all: maxim1wire.a
+all: lib1wire.a
 
-maxim1wire.a: $(OBJECTS)
+lib1wire.a: $(OBJECTS)
 	$(AR) -r -v $@ $(OBJECTS)
 
 .c.o:
 	$(COMPILE) -c $< -o $@
 
 clean:
-	rm -f maxim1wire.a $(OBJECTS)
+	rm -f lib1wire.a $(OBJECTS)

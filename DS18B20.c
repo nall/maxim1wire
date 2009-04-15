@@ -66,6 +66,7 @@ uint8_t ds18b20_write_spad(uint8_t* spad)
     return EXIT_SUCCESS;
 }
 
+#if ONEWIRE_USE_MACROS == 0
 uint8_t ds18b20_read_temperature(int16_t* temperature)
 {
     *temperature = 0;
@@ -132,3 +133,4 @@ uint8_t ds18b20_set_resolution(const uint8_t resolution, const uint8_t store_to_
 
     return EXIT_SUCCESS;
 }
+#endif //ONEWIRE_USE_MACROS
