@@ -50,7 +50,7 @@
 #define CMD_ONEWIRE_SKIP_ROM 0xCC
 #define CMD_ONEWIRE_ALARM_SEARCH 0xEC
 
-uint8_t onewire_select_device_and_issue_command(const uint8_t cmd, const uint8_t family_code);
+uint8_t inline onewire_select_device_and_issue_command(const uint8_t cmd, const uint8_t family_code);
 
 // Check the specified rom code, which is a uint8_t array of size 8
 // this includes:

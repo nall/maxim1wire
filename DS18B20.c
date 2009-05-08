@@ -49,7 +49,11 @@ uint8_t ds18b20_read_spad(uint8_t* spad)
         spad[i] = onewire_readbyte();
     }
 
+#ifdef ONEWIRE_CHECK_CRC
     return ds18b20_check_spad_crc(spad);
+#else
+    return EXIT_SUCCESS;
+#endif // ONEWIRE_CHECK_CRC
 }
 
 uint8_t ds18b20_write_spad(uint8_t* spad)

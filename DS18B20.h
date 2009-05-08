@@ -73,9 +73,7 @@ uint8_t ds18b20_write_spad(uint8_t* spad);
 \
     while(1)\
     {\
-        const uint8_t done = onewire_readbyte();\
-\
-        if(done != 0)\
+        if(onewire_readbyte() != 0)\
         {\
             break;\
         }\

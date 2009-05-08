@@ -129,7 +129,7 @@ void onewire_writebyte(const uint8_t data)
     }
 }
 
-void onewire_init()
+void inline onewire_init()
 {
     // We never drive a 1, so clear the bit in init
     ONEWIRE_PORT &= ~(1 << ONEWIRE_PIN);
@@ -162,7 +162,7 @@ uint8_t onewire_check_rom_crc(const uint8_t* romcode, const uint8_t family_code)
     return (crc == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-uint8_t onewire_select_device_and_issue_command(const uint8_t cmd, const uint8_t family_code)
+uint8_t inline onewire_select_device_and_issue_command(const uint8_t cmd, const uint8_t family_code)
 {
     uint8_t dev_present = onewire_reset();
     if(dev_present == 0)
@@ -178,10 +178,12 @@ uint8_t onewire_select_device_and_issue_command(const uint8_t cmd, const uint8_t
         rom_code[i] = onewire_readbyte();
     }
 
+#ifdef ONEWIRE_CHECK_CRC
     if(onewire_check_rom_crc(&(rom_code[0]), family_code) == EXIT_FAILURE)
     {
         return EXIT_FAILURE;
     }
+#endif // ONEWIRE_CHECK_CRC
 
     onewire_writebyte(cmd);
 
