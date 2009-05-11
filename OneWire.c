@@ -137,7 +137,6 @@ void inline onewire_init()
 
 uint8_t onewire_check_rom_crc(const uint8_t* romcode, const uint8_t family_code)
 {
-    return EXIT_SUCCESS;
     /* ROM CRC
      * 64 bit value
      * 63:56 : 8-bit CRC

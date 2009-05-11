@@ -25,6 +25,7 @@
 #ifndef __DS18B20__H__
 #define __DS18B20__H__
 #include <avr/io.h>
+#include <util/delay.h>
 #include "OneWire.h"
 
 #define DS18B20_PORTIN ONEWIRE_PORTIN
@@ -88,8 +89,6 @@ uint8_t ds18b20_write_spad(uint8_t* spad);
     temperature = spad[SPAD_TEMP_MSB];\
     temperature <<= 8;\
     temperature |= spad[SPAD_TEMP_LSB];\
-\
-    error = EXIT_SUCCESS;\
 }
 
 #define ds18b20_set_resolution(resolution, store_to_eeprom, error)\
@@ -119,8 +118,6 @@ uint8_t ds18b20_write_spad(uint8_t* spad);
             }\
         }\
     }\
-\
-    error= EXIT_SUCCESS;\
 }
 #else
 uint8_t ds18b20_read_temperature(int16_t* temperature);
